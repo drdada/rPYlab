@@ -5,7 +5,7 @@ import time
 import pingLib
 import blinkLib
 import logging
-from threading import Thread
+import threading
 logging.basicConfig(level=logging.DEBUG,
         format='%(asctime)s %(levelname)-8s %(message)s',
         datefmt='%a, %d %b %Y %H:%M:%S',
@@ -15,6 +15,7 @@ sleeptime=10 #in sec
 hostPing ="192.168.1.1" # IP host to check
 
 global ping1_flag
+ping1_flag = 0
 
 def pingTest():
 	while True:
@@ -28,11 +29,11 @@ def pingTest():
 			logging.info('Host %s is not reachable',hostPing)
 		ping1_flag = resPing
 		time.sleep(sleeptime)
-		print("On a attendu, on va recommencer")
 	
 def ledNotification():
 	while True:
 		print("On va vérifier les flag")
+		print(ping1_flag)
 		if ping1_flag == "1":
 			print("J'ai recu un flag, on clignote")
 			blinkLib.blink(2,2)
@@ -42,14 +43,13 @@ def ledNotification():
 if __name__ == '__main__':
 	try:
 		print 'Press Ctrl-C to quit.'
-		thread_pingTest = pingTest()
-		thread_ledNotif = ledNotification()
+		thread_pingTest = threading.Thread(name='pingTest', target=pingTest)
+		thread_ledNotif = threading.Thread(name='ledNotification', target=ledNotification)
 		
 		thread_pingTest.start()
 		print 'Thread pingstart ok'
 		thread_ledNotif.start()
 		print 'Thread ledNotif ok'
-
 
 		thread_pingTest.join()
                 thread_ledNotif.join()
