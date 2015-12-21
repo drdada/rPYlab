@@ -6,7 +6,7 @@ import pingLib
 import blinkLib
 import logging
 import threading
-logging.basicConfig(level=logging.INFO, #Change it for different log level (debug, info)
+logging.basicConfig(level=logging.DEBUG, #Change it for different log level (debug, info)
         format='%(asctime)s :: %(levelname)-8s :: %(message)s',
         datefmt='%a, %d %b %Y %H:%M:%S',
         filename='/var/log/mainLoop.log')
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 		logging.info("Ctrl-C received asking thread to stopping...")
 		threadOn = True
 	else:
-		logging.warn("Main loop killed or something... Asking for kill remaining threads")
+		logging.warning("Main loop killed or something... Asking for kill remaining threads")
                 threadOn = True
 	finally:
 		time.sleep(1) #Waiting for the threads
